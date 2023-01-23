@@ -13,7 +13,7 @@
     "@jup-ag/core": "^4.0.0-beta.6",
     "commander": "^10.0.0",
     "dotenv": "^16.0.3",
-    "flash-loan-mastery-cli": "^1.2.0",
+    "flash-loan-mastery-cli": "^1.2.1",
     "lodash": "^4.17.21",
     "typescript": "^4.9.4"
   },

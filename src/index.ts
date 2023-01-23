@@ -7,7 +7,7 @@ import {
   providerOptions,
   DIE_SLEEP_TIME,
   DEFAULT_SLIPPAGE_BPS,
-  createCommonTokenAccounts,
+  createTokenAccounts,
   loadKeypair,
   sleep,
   createExampleFlashLoanAddressLookupTableFromCache,
@@ -20,17 +20,30 @@ const CONNECTION = new Connection(RPC_ENDPOINT, {
   confirmTransactionInitialTimeout,
 });
 
+const COMMON_TOKEN_MINTS = new Set([
+  "So11111111111111111111111111111111111111112", // wSOL
+  "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v", // USDC
+  "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB", // USDT
+  "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R", // RAY
+  "7dHbWXmci3dT8UFYWYZweBLXgycu7Y3iL6trKn1Y7ARj", // stSOL
+  "mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So", // mSOL
+  "7vfCXTUXx5WJV5JADk17DUJ4ksgau7utNKj4b963voxs", // ETH (Wormhole)
+  "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263", // BONK
+]);
+
 const program = new Command();
 
 program
   .command("create-token-accounts")
   .requiredOption("-k, --keypair <keypair>")
+  .option("-o, --owner <PublicKey>", "The desired owner of the new token accounts")
   .addHelpText(
     "beforeAll",
     "Create common token accounts based to reduce setup when running other commands"
   )
-  .action(async ({ keypair }) => {
-    await createCommonTokenAccounts(CONNECTION, loadKeypair(keypair));
+  .action(async ({ keypair, owner }) => {
+    const targetOwner = owner == null ? undefined : new PublicKey(owner);
+    await createTokenAccounts(CONNECTION, loadKeypair(keypair), COMMON_TOKEN_MINTS, targetOwner);
   });
 
 program
