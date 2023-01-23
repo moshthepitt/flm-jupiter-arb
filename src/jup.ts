@@ -1,7 +1,6 @@
 import { AnchorProvider, BN } from "@project-serum/anchor";
 import JSBI from "jsbi";
 import {
-  AccountMeta,
   AddressLookupTableAccount,
   ComputeBudgetProgram,
   Connection,
@@ -21,6 +20,7 @@ import {
   sleep,
   DEVNET,
   MAINNET,
+  DEFAULT_REFERRER,
   RPC_ENDPOINT,
   DEFAULT_KEYS_CACHE,
   DEFAULT_SLIPPAGE_BPS,
@@ -145,7 +145,8 @@ export const jupiterSimpleArbWithCache = async (
     connection,
     wallet,
     mint1,
-    amount
+    amount,
+    DEFAULT_REFERRER
   );
   const loanRepayAmount = flashLoanResult.repaymentAmount;
 
