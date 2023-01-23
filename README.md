@@ -1,8 +1,8 @@
-# Jupiter Arbitrade Trading Using Flash Loan Mastery
+# Jupiter Arbitrage Trading Using Flash Loan Mastery
 
 Flash Loan Mastery is a smart contract that enables flash loans on Solana. We think that this is the simplest and best Solana flash loan program.
 
-This repo represents the CLI tool for interacting with the Flash Loan Mastery smart contract.
+This repo represents the CLI tool for Jupiter arbitrage trading using the Flash Loan Mastery smart contract.
 
 ## Usage
 
@@ -18,4 +18,4 @@ yarn
 
 ## Documentation
 
-Visit our [website](https://flashloanmastery.com/posts/flash-loan-mastery-cli/) for more documentation.  Here is a [mirror](https://github.com/moshthepitt/flash-loan-mastery/blob/master/app/site/src/posts/cli.md) in case there is an issue with the website.
+Visit our [website](https://flashloanmastery.com/posts/jupiter-arbitrage-trading/) for more documentation.  Here is a [mirror](https://github.com/moshthepitt/flash-loan-mastery/blob/master/app/site/src/posts/jupiter-arbitrage.md) in case there is an issue with the website.
