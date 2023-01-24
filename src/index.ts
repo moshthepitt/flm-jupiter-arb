@@ -1,3 +1,4 @@
+import { getPlatformFeeAccounts } from "@jup-ag/core";
 import { Connection, PublicKey } from "@solana/web3.js";
 import { Command } from "commander";
 import {
@@ -36,14 +37,44 @@ const program = new Command();
 program
   .command("create-token-accounts")
   .requiredOption("-k, --keypair <keypair>")
-  .option("-o, --owner <PublicKey>", "The desired owner of the new token accounts")
+  .option(
+    "-o, --owner <PublicKey>",
+    "The desired owner of the new token accounts"
+  )
   .addHelpText(
     "beforeAll",
     "Create common token accounts based to reduce setup when running other commands"
   )
   .action(async ({ keypair, owner }) => {
+    const xxx = await getPlatformFeeAccounts(CONNECTION, new PublicKey(owner));
+    console.log("xxx", xxx);
     const targetOwner = owner == null ? undefined : new PublicKey(owner);
-    await createTokenAccounts(CONNECTION, loadKeypair(keypair), COMMON_TOKEN_MINTS, targetOwner);
+    await createTokenAccounts(
+      CONNECTION,
+      loadKeypair(keypair),
+      COMMON_TOKEN_MINTS,
+      targetOwner
+    );
+  });
+
+program
+  .command("create-fee-accounts")
+  .requiredOption("-k, --keypair <keypair>")
+  .requiredOption(
+    "-o, --owner <PublicKey>",
+    "The desired owner of the new token accounts"
+  )
+  .addHelpText("beforeAll", "Create jupiter fee token accounts for the provided owner address")
+  .action(async ({ keypair, owner }) => {
+    const targetOwner = new PublicKey(owner);
+    const feeAccountMap = await getPlatformFeeAccounts(CONNECTION, targetOwner);
+    const tokenMints = new Set(Object.keys(feeAccountMap));
+    await createTokenAccounts(
+      CONNECTION,
+      loadKeypair(keypair),
+      tokenMints,
+      targetOwner
+    );
   });
 
 program

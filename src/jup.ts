@@ -11,7 +11,7 @@ import {
   TransactionMessage,
   VersionedTransaction,
 } from "@solana/web3.js";
-import { Jupiter } from "@jup-ag/core";
+import { getPlatformFeeAccounts, Jupiter } from "@jup-ag/core";
 import { uniqWith } from "lodash";
 import {
   setUp,
@@ -141,6 +141,11 @@ export const jupiterSimpleArbWithCache = async (
   const mintDecimals = await getMintDecimals(connection, mint1);
   const initialAmount = amount * 10 ** mintDecimals;
 
+  const jupFeeAccounts = await getPlatformFeeAccounts(
+    connection,
+    DEFAULT_REFERRER
+  );
+
   const flashLoanResult = await getFlashLoanInstructions(
     connection,
     wallet,
@@ -176,14 +181,19 @@ export const jupiterSimpleArbWithCache = async (
       bestBuy &&
       bestSell
     ) {
+      const buyFeeAccount = jupFeeAccounts.get(mint1.toBase58());
+      const sellFeeAccount = jupFeeAccounts.get(mint2.toBase58());
+
       const buySide = await jupiter.exchange({
         routeInfo: bestBuy,
         computeUnitPriceMicroLamports,
+        feeAccount: buyFeeAccount,
         asLegacyTransaction: true,
       });
       const sellSide = await jupiter.exchange({
         routeInfo: bestSell,
         computeUnitPriceMicroLamports,
+        feeAccount: sellFeeAccount,
         asLegacyTransaction: true,
       });
 
