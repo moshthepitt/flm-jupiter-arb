@@ -1585,10 +1585,10 @@ find@^0.3.0:
   dependencies:
     traverse-chain "~0.1.0"
 
-flash-loan-mastery-cli@^1.2.1:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/flash-loan-mastery-cli/-/flash-loan-mastery-cli-1.2.1.tgz#1976fe763af3f207327dd51ba44e55172e4f9be3"
-  integrity sha512-3l7Qp1MDONWz+3VONnYqsFGzRkdBh/yeVvuIrlHmEpQGHytNUnmnHg+hZLJfwEDSfIyrvx4ycJxmViejJDk+8w==
+flash-loan-mastery-cli@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/flash-loan-mastery-cli/-/flash-loan-mastery-cli-1.3.0.tgz#7d4dc1042001f443e5a16e9113d33fa093d79884"
+  integrity sha512-EO0DEAP7KvhkMHn2IsMYcuCh2dIUA46HaxvoK+WI35nWZSphRhQqL7CZDt9WNo4vxoAq5838jKh202SVaoVqXw==
   dependencies:
     "@solana/spl-token" "^0.3.7"
     commander "^10.0.0"
