@@ -191,6 +191,10 @@ program
   .requiredOption("-m1, --token-mint1 <PublicKey>")
   .requiredOption("-m2, --token-mint2 <PublicKey>")
   .requiredOption("-a, --amount <number>", "The amount")
+  .option(
+    "-p, --min-profit <number>",
+    "The minimum amount of `token-mint1` acceptable for a trade"
+  )
   .option("-s, --slippageBps <number>", "The max slippage Bps")
   .option(
     "-c, --computeUnitPriceMicroLamports <number>",
@@ -203,6 +207,7 @@ program
       tokenMint1,
       tokenMint2,
       amount,
+      minProfit,
       slippageBps,
       computeUnitPriceMicroLamports,
     }) => {
@@ -219,10 +224,11 @@ program
             slippageBps == null ? DEFAULT_SLIPPAGE_BPS : Number(slippageBps),
             computeUnitPriceMicroLamports == null
               ? undefined
-              : Number(computeUnitPriceMicroLamports)
+              : Number(computeUnitPriceMicroLamports),
+            minProfit == null ? undefined : Number(minProfit)
           );
         } catch (err) {
-          console.log("retry cached-jupiter-arb");
+          console.log("retry simple-jupiter-arb");
           if (count === MAX_DIE_RETRIES) {
             throw err;
           }
