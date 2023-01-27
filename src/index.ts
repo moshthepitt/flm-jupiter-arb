@@ -5,6 +5,7 @@ import {
   RPC_ENDPOINT,
   MAX_DIE_RETRIES,
   confirmTransactionInitialTimeout,
+  getPoolAccounts,
   providerOptions,
   DIE_SLEEP_TIME,
   DEFAULT_SLIPPAGE_BPS,
@@ -13,6 +14,8 @@ import {
   sleep,
   createExampleFlashLoanAddressLookupTableFromCache,
   seedExampleFlashLoanKeys,
+  unwrapNative,
+  wrapNative,
 } from "flash-loan-mastery-cli/build/main/out";
 import { jupiterSimpleArbWithCache } from "./jup";
 
@@ -58,13 +61,58 @@ program
   });
 
 program
+  .command("wrap-sol")
+  .requiredOption("-k, --keypair <keypair>")
+  .requiredOption(
+    "-n, --native-token-account <PublicKey>",
+    "The native token account address that should received the wrapped SOL"
+  )
+  .requiredOption("-a, --amount <number>", "The amount")
+  .addHelpText("beforeAll", "Send SOL to a wrapped SOL token account")
+  .action(async ({ keypair, nativeTokenAccount, amount }) => {
+    await wrapNative(
+      CONNECTION,
+      loadKeypair(keypair),
+      new PublicKey(nativeTokenAccount),
+      Number(amount)
+    );
+  });
+
+program
+  .command("unwrap-sol")
+  .requiredOption("-k, --keypair <keypair>")
+  .requiredOption(
+    "-n, --native-token-account <PublicKey>",
+    "The native token account address that is the source of the wrapped SOL"
+  )
+  .addHelpText("beforeAll", "Get SOL from a wrapped SOL token account")
+  .action(async ({ keypair, nativeTokenAccount }) => {
+    await unwrapNative(
+      CONNECTION,
+      loadKeypair(keypair),
+      new PublicKey(nativeTokenAccount)
+    );
+  });
+
+program
+  .command("get-pools")
+  .requiredOption("-k, --keypair <keypair>")
+  .addHelpText("beforeAll", "Get all flash loan pools")
+  .action(async ({ keypair }) => {
+    await getPoolAccounts(CONNECTION, loadKeypair(keypair));
+  });
+
+program
   .command("create-fee-accounts")
   .requiredOption("-k, --keypair <keypair>")
   .requiredOption(
     "-o, --owner <PublicKey>",
     "The desired owner of the new token accounts"
   )
-  .addHelpText("beforeAll", "Create jupiter fee token accounts for the provided owner address")
+  .addHelpText(
+    "beforeAll",
+    "Create jupiter fee token accounts for the provided owner address"
+  )
   .action(async ({ keypair, owner }) => {
     const targetOwner = new PublicKey(owner);
     const feeAccountMap = await getPlatformFeeAccounts(CONNECTION, targetOwner);
