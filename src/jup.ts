@@ -113,7 +113,8 @@ export const jupiterSimpleArbWithCache = async (
   mint2: PublicKey,
   amount: number,
   slippageBps = DEFAULT_SLIPPAGE_BPS,
-  computeUnitPriceMicroLamports: number | undefined = undefined
+  computeUnitPriceMicroLamports: number | undefined = undefined,
+  minProfit: number | undefined = undefined
 ) => {
   const { provider } = setUp(connection, wallet);
   let lookupTableAccount: AddressLookupTableAccount | null = null;
@@ -153,7 +154,11 @@ export const jupiterSimpleArbWithCache = async (
     amount,
     DEFAULT_REFERRER
   );
-  const loanRepayAmount = flashLoanResult.repaymentAmount;
+  const minAcceptableAmount = minProfit
+    ? new BN(minProfit * 10 ** mintDecimals).add(
+        flashLoanResult.repaymentAmount
+      )
+    : flashLoanResult.repaymentAmount;
 
   while (true) {
     const _routeMap = jupiter.getRouteMap();
@@ -177,7 +182,7 @@ export const jupiterSimpleArbWithCache = async (
     const sellSideOutAmount = bestSell?.outAmount || JSBI.BigInt(0);
 
     if (
-      new BN(JSBI.toNumber(sellSideOutAmount)).gt(loanRepayAmount) &&
+      new BN(JSBI.toNumber(sellSideOutAmount)).gt(minAcceptableAmount) &&
       bestBuy &&
       bestSell
     ) {
